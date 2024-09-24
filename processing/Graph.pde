@@ -35,9 +35,4 @@ void setupGraph(){
 void drawGraph(){
     textSize(20);
     lineChart.draw(width/4,height/4, width/2, height/2);
-    
-    textSize(20);
-    text("sample text 2", 70,30);
-    textSize(11);
-    text("sample text 1", 70,45);
 }
