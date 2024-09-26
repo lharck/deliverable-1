@@ -8,7 +8,6 @@ int y = 50;
 
 void setupGraph(){
   lineChart = new XYChart(this);
-  
   lineChartX = new FloatList();
   lineChartY = new FloatList();
   
@@ -33,7 +32,6 @@ color[] zoneColors = {
     color(255, 0, 0) 
 };
 
-
 int getUserZone(float heartRatePercent){
     for(int i = 0; i < zones.length; i++){
         if (heartRatePercent <= zones[i]){
@@ -45,17 +43,16 @@ int getUserZone(float heartRatePercent){
 }
 
 void drawGraph(){
-    
     float heartRatePercent = (y/maxHeartRate)*100;
     int userZoneIdx = getUserZone(heartRatePercent);
-    x+=1;
-    y+=5;
+    //x+=1;
+    //y+=5;
     
     lineChartX.append(x);
     lineChartY.append(y);
     lineChart.setLineColour(zoneColors[userZoneIdx]);
 
-    lineChart.setData(lineChartX.toArray(), lineChartY.toArray());
+    //lineChart.setData(lineChartX.toArray(), lineChartY.toArray());
     textSize(20);
-    lineChart.draw(width/4,height/4, width/2, height/2);
+    lineChart.draw(0.05*width, .5*height, .9 * width, .45*height);
 }
