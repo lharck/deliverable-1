@@ -8,6 +8,7 @@ Boolean startedReading = false;
 
 void setup(){
     size(500, 500);
+
     String whichPort = Serial.list()[0];
     myPort = new Serial(this, whichPort, 115200);
     sensorData = new IntDict();    
@@ -67,10 +68,10 @@ void drawProperties(){
 
 void draw(){
     background(51);
-    println(sensorData);
-
     drawTitle();
-    drawProperties();
-    drawGraph();
-    readSerial();
+
+    //drawGrap?h();
+    //readSerial();
+    
+    delay(100);
 }

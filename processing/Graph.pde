@@ -3,36 +3,59 @@ XYChart lineChart;
 FloatList lineChartX;
 FloatList lineChartY;
 
+int x = 0;
+int y = 50;
+
 void setupGraph(){
   lineChart = new XYChart(this);
   
-  //lineChartX = new FloatList();
-  //lineChartY = new FloatList();
-
-  ////lineChartX.append(10.0);
-  ////lineChartX.append(20.0);
+  lineChartX = new FloatList();
+  lineChartY = new FloatList();
   
-  ////lineChartY.append(30.0);
-  ////lineChartY.append(5.0);
-  lineChart.setData(new float[]{1,2,3}, new float[]{1,2,3});
-  
-  
-  
-  // Axis formatting and labels.
   lineChart.showXAxis(true); 
   lineChart.showYAxis(true); 
+  lineChart.setMaxY(maxHeartRate);
   lineChart.setMinY(0);
-     
-  //lineChart.setYFormat("$###,###");  // Monetary value in $US
-  //lineChart.setXFormat("0000");      // Year
+  lineChart.setMinX(x);
+  lineChart.setXAxisLabel("time");
+  lineChart.setYAxisLabel("heart rate");
    
-  // Symbol colours
-  lineChart.setPointColour(color(180,50,50,100));
+  // Symbol colors
   lineChart.setPointSize(5);
   lineChart.setLineWidth(2);
 }
 
+color[] zoneColors = {
+    color(173, 173, 173),
+    color(0, 0, 255),
+    color(0, 255, 0),
+    color(255,255,0),
+    color(255, 0, 0) 
+};
+
+
+int getUserZone(float heartRatePercent){
+    for(int i = 0; i < zones.length; i++){
+        if (heartRatePercent <= zones[i]){
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
 void drawGraph(){
+    
+    float heartRatePercent = (y/maxHeartRate)*100;
+    int userZoneIdx = getUserZone(heartRatePercent);
+    x+=1;
+    y+=5;
+    
+    lineChartX.append(x);
+    lineChartY.append(y);
+    lineChart.setLineColour(zoneColors[userZoneIdx]);
+
+    lineChart.setData(lineChartX.toArray(), lineChartY.toArray());
     textSize(20);
     lineChart.draw(width/4,height/4, width/2, height/2);
 }
