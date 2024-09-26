@@ -1,22 +1,37 @@
-//class Button { 
-//  float xPos = 0;
-//  float yPos = 0;
-//  float xSize = 0;
-//  float ySize = 0;
+class UIButton {
+  float xPos;
+  float yPos;
+  float xSize;
+  float ySize;
+  String text;
+  boolean disabled;
+
+  UIButton (float initXPos, float initYPos, float initXSize, float initYSize, String buttonText) {  
+     xPos = initXPos;
+     yPos = initYPos;
+     xSize = initXSize;
+     ySize = initYSize;
+     text = buttonText;
+     disabled = false;
+  } 
   
-//  String text = "Click me";
+  void setDisabled(boolean isDisabled) {
+      disabled = isDisabled;
+  }
+
+  void draw(){
+    fill(disabled ? 150 : 255); // Change color if disabled
+    rect(xPos, yPos, xSize, ySize);
+    fill(0);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text(text, xPos + xSize / 2, yPos + ySize / 2);
+  }
   
-//  Button (float initXPos, float initYPos, float initXSize, float initYSize) {  
-//     xPos = initXPos;
-//     yPos = initYPos;
-     
-//     xSize = initXSize;
-//     ySize = initYSize;
-//  } 
-  
-  
-  
-//  void draw(){
-    
-//  }
-//} 
+  boolean isClicked(float mouseX, float mouseY){
+    if (!disabled && mouseX > xPos && mouseX < xPos + xSize && mouseY > yPos && mouseY < yPos + ySize) {
+      return true;
+    }
+    return false;
+  }
+}
