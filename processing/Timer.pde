@@ -14,6 +14,12 @@ void setupTimer(){
 }
 
 void mousePressed() {
+    
+    if (startButton.isClicked(mouseX, mouseY)) {
+        println("clicked on button");
+        currentScene = "MainScene";
+    }
+    
     // Check if start button is clicked
     if (startButton.isClicked(mouseX, mouseY)) {
         startTimer();
