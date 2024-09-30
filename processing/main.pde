@@ -4,25 +4,35 @@ import org.gicentre.utils.stat.*;
 MainScene mainScene;
 AgeScene ageScene;
 
+// Scene management
+String currentScene = "AgeScene"; // Start with AgeScene
 
-// maybe make Scene class eventually which can hold both scene instances;
-// so we can do currentScene.draw()
-String currentScene = "AgeScene";
-
-void setup(){
+void setup() {
     size(500, 600);
-    
     mainScene = new MainScene();
     ageScene = new AgeScene();
 }
 
-void draw(){
-    if(currentScene == "MainScene") {
-        mainScene.draw();   
-    }
-    else if(currentScene == "AgeScene"){
+void draw() {
+    // Switch between scenes
+    if (currentScene == "MainScene") {
+        mainScene.draw();
+    } else if (currentScene == "AgeScene") {
         ageScene.draw();
     }
-    
-    delay(100);
+}
+
+// Ensure you only handle mouse clicks in the current scene
+void mousePressed() {
+    if (currentScene == "AgeScene") {
+        ageScene.mousePressed();
+    } else if (currentScene == "MainScene") {
+        mainScene.mousePressed();
+    }
+}
+
+void keyPressed() {
+    if (currentScene == "AgeScene") {
+        ageScene.keyPressed();
+    }
 }

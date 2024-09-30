@@ -1,61 +1,40 @@
-Boolean startedReading = false; 
-int startTime; // Variable to track the start time
-String elapsedTime; // String to store the formatted elapsed time
-boolean timerStarted = false; // Variable to check if timer started
-boolean timerStopped = false; // Variable to check if timer stopped
+class Timer {
+    int startTime;           // Variable to track the start time
+    String elapsedTime = "00:00"; // String to store the formatted elapsed time
+    boolean timerStarted = false; // Variable to check if timer started
+    boolean timerStopped = false; // Variable to check if timer stopped
 
-UIButton startButton;
-UIButton stopButton;
-    
-void setupTimer(){
-    startButton = new UIButton(50, 50, 100, 40, "Start"); //Initialize StartButton
-    stopButton = new UIButton(200, 50, 100, 40, "Stop"); //Initialize StopButton   
-    stopButton.setDisabled(true); // Disable stop button initially
-}
-
-void mousePressed() {
-    
-    if (startButton.isClicked(mouseX, mouseY)) {
-        println("clicked on button");
-        currentScene = "MainScene";
+    Timer() {
+        // Timer constructor
     }
-    
-    // Check if start button is clicked
-    if (startButton.isClicked(mouseX, mouseY)) {
-        startTimer();
+
+    // Start the timer and set the initial time
+    void startTimer() {
+        startTime = millis(); // Record the start time
+        timerStarted = true;
+        timerStopped = false;
     }
-    
-    // Check if stop button is clicked
-    if (stopButton.isClicked(mouseX, mouseY)) {
-        stopTimer();
+
+    // Stop the timer
+    void stopTimer() {
+        timerStopped = true;
     }
-}
 
-void startTimer() {
-    startTime = millis();
-    timerStarted = true; 
-    timerStopped = false; 
-    
-    stopButton.setDisabled(false); 
-    startButton.setDisabled(true); 
-}
-
-void stopTimer() {
-    timerStopped = true; 
-    stopButton.setDisabled(true); 
-    startButton.setDisabled(false); 
-}
-
-void drawTimer(){
-    startButton.draw();
-    stopButton.draw();   
-    
-    if(timerStarted && !timerStopped){
-        int currentTime = millis() - startTime; // Calculate elapsed time
-        elapsedTime = formatTime(currentTime);
-    
+    // Draw the timer on the screen, showing elapsed time in MM:SS format
+    void drawTimer() {
+        if (timerStarted && !timerStopped) {
+            int currentTime = millis() - startTime; // Calculate elapsed time
+            elapsedTime = formatTime(currentTime);  // Format the time into MM:SS
+        }
         textSize(30);
         fill(255);
-        text(elapsedTime, (width - textWidth(elapsedTime)) / 2, 120); // Position below buttons
+        text(elapsedTime, 420, 75); // Display the elapsed time
+    }
+
+    // Format the elapsed time into MM:SS format
+    String formatTime(int milliseconds) {
+        int seconds = (milliseconds / 1000) % 60;
+        int minutes = (milliseconds / 60000);
+        return nf(minutes, 2) + ":" + nf(seconds, 2);
     }
 }

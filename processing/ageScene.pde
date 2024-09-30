@@ -1,18 +1,54 @@
 class AgeScene {
-    UIButton inputButton;
+    UIButton nextButton; // Button to proceed to the next scene
+    TEXTBOX ageTextBox;  // Textbox for age input
+    int enteredAge = -1; // Variable to store the entered age
 
     AgeScene() {  
-        inputButton = new UIButton(50, 50, 100, 40, "Click Me");
-
-        // initalizing stuff goes here
-    } 
-    
- 
-    void draw(){
-        background(0);
-        inputButton.draw();        
-        // anything you want to draw goes here
-       
+        // Initialize the "Next" button and the text box for age input
+        nextButton = new UIButton(200, 300, 100, 40, "Next");
+        ageTextBox = new TEXTBOX(200, 135, 100, 40); // Textbox with specified position and size
     }
 
+    void draw() {
+        background(0);
+        fill(255);
+        textSize(20);
+        text("Enter your age:", 125, 147);
+
+        ageTextBox.DRAW();
+        nextButton.draw();
+    }
+
+    void mousePressed() {
+        if (currentScene == "AgeScene") {
+            ageTextBox.PRESSED(mouseX, mouseY);
+
+            if (nextButton.isClicked(mouseX, mouseY)) {
+                // Validate if age has been entered and is numeric
+                if (ageTextBox.Text.length() > 0 && isNumeric(ageTextBox.Text)) {
+                    enteredAge = int(ageTextBox.Text); // Store the entered age
+                    maxHeartRate = 220 - enteredAge; // Update maxHeartRate
+                    println("Age entered: " + enteredAge + ", Max Heart Rate: " + maxHeartRate); 
+                    currentScene = "MainScene";
+                } else {
+                    println("Please enter a valid age.");
+                }
+            }
+        }
+    }
+
+    void keyPressed() {
+        // Handle typing input in the text box
+        ageTextBox.KEYPRESSED(key, keyCode);
+    }
+
+    // Utility function to check if a string is numeric
+    boolean isNumeric(String str) {
+        try {
+            int num = int(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
