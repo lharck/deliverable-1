@@ -8,9 +8,10 @@ AgeScene ageScene;
 String currentScene = "AgeScene"; // Start with AgeScene
 
 void setup() {
-    size(500, 600);
+    size(720, 820);
     mainScene = new MainScene();
     ageScene = new AgeScene();
+    //setupData();
 }
 
 void draw() {
@@ -20,6 +21,8 @@ void draw() {
     } else if (currentScene == "AgeScene") {
         ageScene.draw();
     }
+    
+    //dataLoop();
 }
 
 // Ensure you only handle mouse clicks in the current scene

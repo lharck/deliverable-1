@@ -29,6 +29,6 @@ void setupBarChart(){
 
 void drawBarChart(){
     textSize(20);
-    barChart.draw(0.1*width, .1*height, .8 * width, .3*height);
+    barChart.draw(0.1*width, .15*height, .8 * width, .3*height);
     //barChart.draw(10,(0.20*height),(width-30),(0.30*height)); 
 }

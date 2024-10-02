@@ -1,11 +1,18 @@
-class MainScene {
-    UIButton startButton;
-    UIButton stopButton;
-    Timer timer;  
+Timer timer;  
 
+class MainScene {
+    UIButton fitnessButton;
+    UIButton stopButton;
+    UIButton calmButton;   // Button for Calm Mode
+    UIButton stressedButton;  // Button for Stressed Mode
+    boolean isCalmMode = false;
+    boolean isStressedMode = false;
+    
     MainScene() {
-        startButton = new UIButton(265, 15, 100, 40, "Start");
-        stopButton = new UIButton(365, 15, 100, 40, "Stop");
+        fitnessButton = new UIButton(90, 30, 120, 40, "Fitness Mode");
+        stopButton = new UIButton(480, 30, 100, 40, "Stop");
+        calmButton = new UIButton(220, 30, 120, 40, "Calm Mode");
+        stressedButton = new UIButton(350, 30, 120, 40, "Stressed Mode");
         stopButton.setDisabled(true); // Stop button initially disabled
 
         timer = new Timer(); // Initialize the Timer class
@@ -18,37 +25,89 @@ class MainScene {
         background(220);
         fill(32, 92, 122);
         rect(0, 0, width, .1*height);
-        rect(365,50,150,50);
         drawTitle();
         drawBarChart();
         drawGraph();
         timer.drawTimer();  // Display timer using the Timer class
-        startButton.draw(); // Draw "Start" button
-        stopButton.draw();  // Draw "Stop" button
+        fitnessButton.draw();   // Draw Start button
+        stopButton.draw();    // Draw Stop button
+        calmButton.draw();    // Draw Calm Mode button
+        stressedButton.draw(); // Draw Stressed Mode button
     }
 
     void mousePressed() {
-        // Handle start button click
-        if (startButton.isClicked(mouseX, mouseY)) {
-            timer.startTimer();  // Start the timer via the Timer class
-            startButton.setDisabled(true);
-            stopButton.setDisabled(false);
+        // Start fitness mode
+        if (fitnessButton.isClicked(mouseX, mouseY)) {
+            startFitnessMode();
+            
+        }
+        
+        // Stop modes
+        if (stopButton.isClicked(mouseX, mouseY)) {
+            timer.stopTimer();
+            stopButton.setDisabled(true);
+            fitnessButton.setDisabled(false);
+            calmButton.setDisabled(false);
+            stressedButton.setDisabled(false);
+        }
+        
+        // Start Calm Mode
+        if (calmButton.isClicked(mouseX, mouseY)) {
+            startCalmMode();
+        }
+        
+        // Start Stressed Mode
+        if (stressedButton.isClicked(mouseX, mouseY)) {
+            startStressedMode();
         }
 
-        // Handle stop button click
-        if (stopButton.isClicked(mouseX, mouseY)) {
-            timer.stopTimer();  // Stop the timer via the Timer class
-            stopButton.setDisabled(true);
-            startButton.setDisabled(false);
-        }
     }
 
     void drawTitle() {
-        String title = "Heart Rate Monitor";
-        fill(255, 255, 255);
+        String title1 = "Heart Rate Monitor";
+        fill(32, 92, 122);
         textSize(30);
-        text(title, (width - textWidth(title)) / 2, .075 * height);
-        fill(0, 408, 612);
-
+        text(title1, (width - textWidth(title1)) / 2, .480 * height);
+        String title2 = "Exercise Zones";
+        fill(32, 92, 122);
+        textSize(30);
+        text(title2, (width - textWidth(title2)) / 2, .125 * height);
     }
+    
+    // Method to handle fitness mode
+    void startFitnessMode() {
+        timer.startTimer();  // Track time
+        fitnessButton.setDisabled(true);
+        stopButton.setDisabled(false);
+        calmButton.setDisabled(false);
+        stressedButton.setDisabled(false);
+        isCalmMode = false;  // Ensure calm mode is off
+        isStressedMode = false;  // Ensure stressed mode is off
+        
+    }
+    
+    // Method to handle calm mode
+    void startCalmMode() {
+        isCalmMode = true;
+        isStressedMode = false;
+        timer.startTimer();  // Track time
+        calmButton.setDisabled(true);
+        stopButton.setDisabled(false);
+        fitnessButton.setDisabled(false);
+        stressedButton.setDisabled(false);
+        
+    }
+    
+    // Method to handle stressed mode
+    void startStressedMode() {
+        isStressedMode = true;
+        isCalmMode = false;
+        timer.startTimer();  // Track time
+        stressedButton.setDisabled(true);
+        stopButton.setDisabled(false);
+        fitnessButton.setDisabled(false);
+        calmButton.setDisabled(false);
+        
+    }
+
 }
