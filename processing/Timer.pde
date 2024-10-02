@@ -1,8 +1,7 @@
 class Timer {
     int startTime;           // Variable to track the start time
     String elapsedTime = "00:00"; // String to store the formatted elapsed time
-    boolean timerStarted = false; // Variable to check if timer started
-    boolean timerStopped = false; // Variable to check if timer stopped
+    boolean isRunning = false; // Variable to check if timer started
 
     Timer() {
         // Timer constructor
@@ -11,18 +10,17 @@ class Timer {
     // Start the timer and set the initial time
     void startTimer() {
         startTime = millis(); // Record the start time
-        timerStarted = true;
-        timerStopped = false;
+        isRunning = true;
     }
 
     // Stop the timer
     void stopTimer() {
-        timerStopped = true;
+        isRunning = false;
     }
 
     // Draw the timer on the screen, showing elapsed time in MM:SS format
     void drawTimer() {
-        if (timerStarted && !timerStopped) {
+        if (timer.isRunning) {
             int currentTime = millis() - startTime; // Calculate elapsed time
             elapsedTime = formatTime(currentTime);  // Format the time into MM:SS
         }

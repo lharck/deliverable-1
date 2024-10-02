@@ -1,8 +1,9 @@
+Timer timer;  
+
 class MainScene {
     UIButton startButton;
     UIButton stopButton;
-    Timer timer;  
-
+    
     MainScene() {
         startButton = new UIButton(265, 15, 100, 40, "Start");
         stopButton = new UIButton(365, 15, 100, 40, "Stop");

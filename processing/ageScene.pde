@@ -1,8 +1,10 @@
+int CALIBRATION_TIME = 4;
 class AgeScene {
     UIButton nextButton; // Button to proceed to the next scene
     TEXTBOX ageTextBox;  // Textbox for age input
     int enteredAge = -1; // Variable to store the entered age
-
+    float startRecordingTimestamp;
+    
     AgeScene() {  
         // Initialize the "Next" button and the text box for age input
         nextButton = new UIButton(200, 300, 100, 40, "Next");
@@ -13,10 +15,27 @@ class AgeScene {
         background(0);
         fill(255);
         textSize(20);
-        text("Enter your age:", 125, 147);
 
-        ageTextBox.DRAW();
-        nextButton.draw();
+        if(currentState == "AskingForAge" ) {
+            text("Enter your age:", 125, 147);
+            ageTextBox.DRAW();
+            nextButton.draw();
+        } 
+        else if(currentState == "CalcHeartRate") {
+            float timePassed = (millis() - startRecordingTimestamp)/1000;
+            println(timePassed);
+            if(timePassed < CALIBRATION_TIME){
+                text("Calculating Your Resting Heart Rate...\nTime till complete: " + (int)(CALIBRATION_TIME-timePassed) + "\nCurrent Value: " + avgHeartRate, 250, 147);  
+            }
+            else if(timePassed >= CALIBRATION_TIME && timePassed <= (CALIBRATION_TIME+5)){
+                text("Your resting heart rate: " + avgHeartRate, 250, 147);  
+                restingHeartRate = avgHeartRate;
+            }
+            else if(timePassed >= CALIBRATION_TIME){
+                currentScene = "MainScene";
+
+            }
+        }
     }
 
     void mousePressed() {
@@ -29,7 +48,9 @@ class AgeScene {
                     enteredAge = int(ageTextBox.Text); // Store the entered age
                     maxHeartRate = 220 - enteredAge; // Update maxHeartRate
                     println("Age entered: " + enteredAge + ", Max Heart Rate: " + maxHeartRate); 
-                    currentScene = "MainScene";
+                    currentState = "CalcHeartRate";
+                    startRecordingTimestamp = millis();
+                    
                 } else {
                     println("Please enter a valid age.");
                 }
