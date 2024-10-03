@@ -20,6 +20,15 @@ class MainScene {
         setupGraph();
         setupBarChart();
     }
+    
+    void showAverageHeartRate(){
+        if(!sensorData.hasKey("Heartrate")) { return; }
+        println("hi");
+        int currentHeartRate = sensorData.get("Heartrate");
+        
+        text("Average Heart Rate: " + getAverageHeartRate(), .8*width, .125 * height);
+        text("Current Heart Rate: " + currentHeartRate, .8*(width), .225 * height);
+    }
 
     void draw() {
         background(220);
@@ -33,6 +42,7 @@ class MainScene {
         stopButton.draw();    // Draw Stop button
         calmButton.draw();    // Draw Calm Mode button
         stressedButton.draw(); // Draw Stressed Mode button
+        //showAverageHeartRate();
     }
 
     void mousePressed() {

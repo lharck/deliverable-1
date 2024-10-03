@@ -24,8 +24,9 @@ void parseLine(){
     } 
     else {
         if(startedReading){
-            print(lineString);
+            println(lineString);
             int spaceIdx = lineString.indexOf(" ");
+            if(spaceIdx < 0){return;}
             String property = lineString.substring(0,spaceIdx-1);
             int value = int(lineString.substring(spaceIdx+1, lineString.length()));
             sensorData.set(property, value);
@@ -73,12 +74,9 @@ float getAverageHeartRate(){
 
 void dataLoop(){
      readSerial();
-       
-     // TODO: find actual value name for heartrate
      if(currentState == "CalcHeartRate"){
-         float hrv = random(90,140)/1.0;
+         float hrv = sensorData.get("Heartrate");
          heartRateValues.append(hrv);
          avgHeartRate = (int)(getAverageHeartRate());
-         
      }
 }

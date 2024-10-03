@@ -5,13 +5,12 @@ MainScene mainScene;
 AgeScene ageScene;
 
 // Scene management
-String currentScene = "AgeScene"; // Start with AgeScene
 
 void setup() {
     size(720, 820);
     mainScene = new MainScene();
     ageScene = new AgeScene();
-    //setupData();
+    setupData();
 }
 
 void draw() {
@@ -22,7 +21,7 @@ void draw() {
         ageScene.draw();
     }
     
-    //dataLoop();
+    dataLoop();
 }
 
 // Ensure you only handle mouse clicks in the current scene

@@ -1,6 +1,8 @@
 XYChart lineChart;
 FloatList lineChartX;
 FloatList lineChartY;
+import org.gicentre.utils.colour.ColourTable;
+ColourTable cTable;
 
 int x = 0;
 int y = 50;
@@ -17,6 +19,12 @@ void setupGraph(){
   lineChart.setMinX(x);
   lineChart.setXAxisLabel("time");
   lineChart.setYAxisLabel("heart rate");
+  
+  cTable = new ColourTable();
+  
+  cTable.addContinuousColourRule(0,255,0,0);
+  //cTable.addColor(0.5, color(255, 255, 0));
+  //cTable.addColor(1, color(0, 255, 0));
    
   // Symbol colors
   lineChart.setPointSize(5);
@@ -42,14 +50,18 @@ int getUserZone(float heartRatePercent){
 }
 
 void drawGraph(){
+    if(!startedReading){return;}
+    
     if(timer.isRunning) {
         float heartRatePercent = (y/maxHeartRate)*100;
         int userZoneIdx = getUserZone(heartRatePercent);
-        x+=1;
-        y+=5;
         
-        lineChartX.append(x);
-        lineChartY.append(y);
+        if(sensorData.hasKey("Heartrate")) {
+            x+=1;
+            lineChartY.append(sensorData.get("Heartrate"));
+            lineChartX.append(x);
+
+        }
         color chosenColor = color(255,255,255);
         
         if (userZoneIdx != -1){

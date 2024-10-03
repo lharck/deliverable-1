@@ -48,7 +48,7 @@ class AgeScene {
                 if (ageTextBox.Text.length() > 0 && isNumeric(ageTextBox.Text)) {
                     enteredAge = int(ageTextBox.Text); // Store the entered age
                     maxHeartRate = 220 - enteredAge; // Update maxHeartRate
-                    println("Age entered: " + enteredAge + ", Max Heart Rate: " + maxHeartRate); 
+                    //println("Age entered: " + enteredAge + ", Max Heart Rate: " + maxHeartRate); 
                     currentState = "CalcHeartRate";
                     startRecordingTimestamp = millis();
                     

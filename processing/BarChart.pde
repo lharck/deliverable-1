@@ -1,8 +1,6 @@
 BarChart barChart;
 
-void setupBarChart(){
-  println("Hello world");
-  
+void setupBarChart(){  
   barChart = new BarChart(this);
   barChart.setData(new float[] {0.76, 0.24, 0.39});
      
@@ -30,5 +28,4 @@ void setupBarChart(){
 void drawBarChart(){
     textSize(20);
     barChart.draw(0.1*width, .15*height, .8 * width, .3*height);
-    //barChart.draw(10,(0.20*height),(width-30),(0.30*height)); 
 }
