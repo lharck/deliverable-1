@@ -35,4 +35,12 @@ class Timer {
         int minutes = (milliseconds / 60000);
         return nf(minutes, 2) + ":" + nf(seconds, 2);
     }
+    
+    int getElapsedTime() {
+        if (isRunning) {
+            int currentTime = millis();  // Get the current time in milliseconds
+            return (currentTime - startTime) / 1000;  // Return elapsed time in seconds
+        } 
+        return 0;  // If timer is not running, return 0
+    }
 }
