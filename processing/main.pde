@@ -8,9 +8,9 @@ AgeScene ageScene;
 
 void setup() {
     size(720, 820);
+    setupData();
     mainScene = new MainScene();
     ageScene = new AgeScene();
-    setupData();
 }
 
 void draw() {

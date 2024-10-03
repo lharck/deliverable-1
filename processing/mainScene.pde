@@ -114,7 +114,7 @@ class MainScene {
         if (showStressMessage) {
             if (millis() - messageStartTime > 5000) {  // 5 seconds passed
                 showStressMessage = false;
-                isStressMessageDisplayed = false;de
+                isStressMessageDisplayed = false;
                 background(220);  // Reset the background to default color
             } else {
                 fill(255, 0, 0);  // Red background for "stressed"
@@ -131,7 +131,6 @@ class MainScene {
         // Start fitness mode
         if (fitnessButton.isClicked(mouseX, mouseY)) {
             startFitnessMode();
-            
         }
         
         // Stop modes
@@ -176,7 +175,6 @@ class MainScene {
         stressedButton.setDisabled(false);
         isCalmMode = false;  // Ensure calm mode is off
         isStressedMode = false;  // Ensure stressed mode is off
-        
     }
     
     // Method to handle calm mode
@@ -193,12 +191,6 @@ class MainScene {
         // Reset heart rate readings and calm message flag
         heartRateIndex = 0;
         isCalmMessageDisplayed = false;
-        
-        // Clear the heart rate array by resetting values
-        //for (int i = 0; i < calmHeartRates.length; i++) {
-        //    calmHeartRates[i] = 0;
-        //}
-        
     }
     
     // Method to handle stressed mode

@@ -1,4 +1,4 @@
-int CALIBRATION_TIME = 4;
+int CALIBRATION_TIME = 30;
 class AgeScene {
     UIButton nextButton; // Button to proceed to the next scene
     TEXTBOX ageTextBox;  // Textbox for age input

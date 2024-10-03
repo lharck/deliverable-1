@@ -1,9 +1,9 @@
 XYChart lineChart;
 FloatList lineChartX;
 FloatList lineChartY;
-
-int x = 0;
-int y = 50;
+int MAX_VALUES = 100;
+float x = 0;
+int y = 0;
 
 void setupGraph(){
   lineChart = new XYChart(this);
@@ -32,8 +32,14 @@ void drawGraph(){
         int userZoneIdx = getUserZone(heartRatePercent);
     
         x+=1;
+        
         lineChartY.append(heartRate);
         lineChartX.append(x);
+        
+        if(lineChartY.size() > MAX_VALUES){
+            lineChartY.remove(0);
+            lineChartX.remove(0);
+        }
         
          color chosenColor = color(255,255,255);
     
@@ -42,13 +48,16 @@ void drawGraph(){
         }
         
         lineChart.setPointColour(chosenColor);
+        lineChart.setLineColour(chosenColor);
+
         lineChart.setData(lineChartX.toArray(), lineChartY.toArray());
-    } else {
-        lineChartX.clear();
-        lineChartY.clear();
-        x = 0;
-        y = 50;
     }
+    
+    float seconds = (x);
+    println(seconds);
+    
+    lineChart.setMinX(max(x-MAX_VALUES+1, 0));
+    lineChart.setMaxX(max(x, MAX_VALUES));
     
     textSize(20);
     lineChart.draw(0.05*width, .5*height, .9 * width, .45*height);

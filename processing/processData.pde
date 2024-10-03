@@ -68,14 +68,14 @@ int getHeartRate(){
     float hrv = -1;
     
     if(DEBUG_MODE){
-        hrv = (int)random(70,maxHeartRate); 
+        hrv = (int)random(100,maxHeartRate); 
 
         if (heartRateValues.size() >= 1){
             hrv = heartRateValues.get(heartRateValues.size()-1);
         }
        
        int sign = (int(random(2)) == 0) ? -1 : 1;
-       hrv += (sign*random(1,15));
+       hrv += (sign*random(1,5));
        hrv = constrain(hrv, 60, maxHeartRate);
     }
     else if(sensorData.hasKey("Heartrate")){
@@ -96,6 +96,11 @@ void restartData(){
     for(int i = 0; i < 5; i++){
          timeInEachZone[i] = 0;   
      }
+     
+    lineChartX.clear();
+    lineChartY.clear();
+    x = 0;
+    y = 0;
 }
 
 void updateTimeInZone(){
@@ -106,8 +111,7 @@ void updateTimeInZone(){
     int userZoneIdx = getUserZone(heartRatePercent);
     String currentZone = zoneNames[userZoneIdx];
     
-    //println("Current zone: ", currentZone);
-    //println(timeInEachZone[userZoneIdx], currentZone);
+    //println("Current zone: ", currentZone, heartRatePercent);
     timeInEachZone[userZoneIdx]+=1;
     maxTimeInEachZone = max(timeInEachZone[userZoneIdx], maxTimeInEachZone);
 
@@ -125,7 +129,7 @@ void dataLoop(){
         readSerial();
     }
  
-    println();
+    //println();
     updateTimeInZone();
     updateAvgHeartRate();
 }
