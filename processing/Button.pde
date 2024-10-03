@@ -34,4 +34,8 @@ class UIButton {
         }
         return false;
     }
+    
+    boolean isDisabled() {
+        return disabled;
+    }
 }

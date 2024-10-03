@@ -31,47 +31,43 @@ void setupGraph(){
   lineChart.setLineWidth(2);
 }
 
-color[] zoneColors = {
-    color(173, 173, 173),
-    color(0, 0, 255),
-    color(0, 255, 0),
-    color(255,255,0),
-    color(255, 0, 0) 
-};
 
-int getUserZone(float heartRatePercent){
-    for(int i = 0; i < zones.length; i++){
-        if (heartRatePercent <= zones[i]){
-            return i;
-        }
-    }
-    
-    return -1;
-}
 
 void drawGraph(){
     if(!startedReading){return;}
     
     if(timer.isRunning) {
-        float heartRatePercent = (y/maxHeartRate)*100;
-        int userZoneIdx = getUserZone(heartRatePercent);
+        float heartRatePercent = (y/maxHeartRate) * 100;
         
         if(sensorData.hasKey("Heartrate")) {
-            x+=1;
-            lineChartY.append(sensorData.get("Heartrate"));
+            float currentHeartRate = sensorData.get("Heartrate");
+            x += 1;
+            lineChartY.append(currentHeartRate);
             lineChartX.append(x);
 
+            color chosenColor = color(0, 255, 0);  // Default to green
+
+            if (currentHeartRate > 130) {
+                // Gradient from orange t red
+                float ratio = map(currentHeartRate, 130, maxHeartRate, 0, 1);
+                chosenColor = lerpColor(color(255, 165, 0), color(255, 0, 0), ratio);
+            } else if (currentHeartRate > 100) {
+                // Gradient from yellow to orange
+                float ratio = map(currentHeartRate, 100, 130, 0, 1);
+                chosenColor = lerpColor(color(255, 255, 0), color(255, 165, 0), ratio);
+            } else {
+                // Green for below 100 bpm
+                chosenColor = color(0, 255, 0);
+            }
+
+            lineChart.setPointColour(chosenColor);
         }
-        color chosenColor = color(255,255,255);
-        
-        if (userZoneIdx != -1){
-            chosenColor = zoneColors[userZoneIdx];
-        }
-        
-        lineChart.setPointColour(chosenColor);
-    
+
         lineChart.setData(lineChartX.toArray(), lineChartY.toArray());
-    } else{
+        lineChart.setLineColour(color(255, 0, 0));  // Set default line color (e.g., red)
+
+    } else {
+        // Reset the graph when the timer stops
         lineChartX.clear();
         lineChartY.clear();
         x = 0;
@@ -79,5 +75,5 @@ void drawGraph(){
     }
     
     textSize(20);
-    lineChart.draw(0.05*width, .5*height, .9 * width, .45*height);
+    lineChart.draw(0.05 * width, 0.5 * height, 0.9 * width, 0.45 * height);
 }
