@@ -3,22 +3,17 @@ Timer timer;
 class MainScene {
     UIButton fitnessButton;
     UIButton stopButton;
-    UIButton calmButton;   // Button for Calm Mode
-    UIButton stressedButton;  // Button for Stressed Mode
-    boolean isCalmMode = false;
-    boolean isStressedMode = false;
-    int heartRateIndex = 0;
-    int calmDuration = 60;  // 60 seconds for calm mode
-    boolean isCalmMessageDisplayed = false, isStressMessageDisplayed = false;
-    int avgHeartRate = (int) (getAverageHeartRate());
-    int messageStartTime = 0;  // To track when the "You are calm" message starts
-    boolean showCalmMessage = false, showStressMessage = false;  // To control whether the message is shown
+    UIButton calmVsStressButton;   // Combined Calm vs Stress Mode Button
+    boolean isCalmVsStressMode = false;
+    
+    // For tracking heart rate changes
+    int calmVsStressStartTime = -1;
+    int currentHeartRate = -1;  // Variable to store real-time heart rate
     
     MainScene() {
         fitnessButton = new UIButton(90, 30, 120, 40, "Fitness Mode");
         stopButton = new UIButton(480, 30, 100, 40, "Stop");
-        calmButton = new UIButton(220, 30, 120, 40, "Calm Mode");
-        stressedButton = new UIButton(350, 30, 120, 40, "Stressed Mode");
+        calmVsStressButton = new UIButton(220, 30, 200, 40, "Calm vs Stress Mode");
         stopButton.setDisabled(true); // Stop button initially disabled
 
         timer = new Timer(); // Initialize the Timer class
@@ -26,104 +21,32 @@ class MainScene {
         setupGraph();
         setupBarChart();
     }
-    
-    void showAverageHeartRate(){
-        if(!sensorData.hasKey("Heartrate")) { return; }
-        println("hi");
-        int currentHeartRate = sensorData.get("Heartrate");
+
+    void showHeartRate() {
+        if (!sensorData.hasKey("Heartrate")) { return; }
+        currentHeartRate = sensorData.get("Heartrate");  // Get the real-time heart rate
         
-        text("Average Heart Rate: " + getAverageHeartRate(), .8*width, .125 * height);
-        text("Current Heart Rate: " + currentHeartRate, .8*(width), .225 * height);
+        textSize(25);
+        fill(255,0,0);  
+        text(currentHeartRate, .125 * width, .480 * height);  // Display real-time heart rate
     }
 
     void draw() {
         background(220);
         fill(32, 92, 122);
-        rect(0, 0, width, .1*height);
+        rect(0, 0, width, .1 * height);
         drawTitle();
         drawBarChart();
         drawGraph();
         timer.drawTimer();  // Display timer using the Timer class
         fitnessButton.draw();   // Draw Start button
         stopButton.draw();    // Draw Stop button
-        calmButton.draw();    // Draw Calm Mode button
-        stressedButton.draw(); // Draw Stressed Mode button
-        //showAverageHeartRate();
-        if (isCalmMode) {
-            // Get the average heart rate during Calm Mode
-            
-    
-            // Check if 60 seconds have passed
-            if (timer.getElapsedTime() >= calmDuration && !isCalmMessageDisplayed) {
-                // Compare the current average heart rate to avgHeartRate
-                if (avgHeartRate < getAverageHeartRate()) {
-                    fill(0, 255, 0);  // Green background for "calm"
-                    rect(0, 0, width, height);  // Cover the whole screen with green background
-    
-                    textSize(20);
-                    fill(255);  // White text for visibility
-                    text("You are calm", (width - textWidth("You are calm")) / 2, .65 * height);
-                    
-                    // Record the time when the message is displayed
-                    messageStartTime = millis();
-                    showCalmMessage = true;  // Start showing the message
-                    isCalmMessageDisplayed = true;
-                }
-            }
-        }
-    
-        // If the message is being shown, hide it after 5 seconds
-        if (showCalmMessage) {
-            if (millis() - messageStartTime > 5000) {  // 5 seconds passed
-                // Reset the message display state
-                showCalmMessage = false;
-                isCalmMessageDisplayed = false;
-                background(220);  // Reset the background to default color
-            } else {
-                // Continue showing the message within the 5-second window
-                fill(0, 255, 0);  // Green background for "calm"
-                rect(0, 0, width, height);  // Cover the whole screen with green background
-                
-                textSize(20);
-                fill(255);  // White text for visibility
-                text("You are calm", (width - textWidth("You are calm")) / 2, .65 * height);
-            }
-        }
-        if (isStressedMode) {
-            // Get the average heart rate during Stress Mode
-            
-    
-            // Check if 60 seconds have passed
-            if (timer.getElapsedTime() >= calmDuration && !isStressMessageDisplayed) {
-                // Compare the current average heart rate to avgHeartRate
-                if (avgHeartRate > getAverageHeartRate()) {
-                    fill(255, 0, 0);  // Red background for "stressed"
-                    rect(0, 0, width, height);  // Cover the whole screen with red background
-    
-                    textSize(20);
-                    fill(255);  // White text for visibility
-                    text("You are stressed", (width - textWidth("You are stressed")) / 2, .65 * height);
-                    
-                    // Record the time when the message is displayed
-                    messageStartTime = millis();
-                    showStressMessage = true;  // Start showing the stress message
-                    isStressMessageDisplayed = true;
-                }
-            }
-        }
-        if (showStressMessage) {
-            if (millis() - messageStartTime > 5000) {  // 5 seconds passed
-                showStressMessage = false;
-                isStressMessageDisplayed = false;
-                background(220);  // Reset the background to default color
-            } else {
-                fill(255, 0, 0);  // Red background for "stressed"
-                rect(0, 0, width, height);  // Cover the whole screen with red background
-    
-                textSize(20);
-                fill(255);  // White text for visibility
-                text("You are stressed", (width - textWidth("You are stressed")) / 2, .65 * height);
-            }
+        calmVsStressButton.draw(); // Draw Calm vs Stress Mode button
+        
+        showHeartRate();  // Display real-time heart rate
+
+        if (isCalmVsStressMode) {
+            checkCalmVsStressMode();  // Continuously check the Calm vs Stress mode
         }
     }
 
@@ -135,23 +58,13 @@ class MainScene {
         
         // Stop modes
         if (stopButton.isClicked(mouseX, mouseY)) {
-            timer.stopTimer();
-            stopButton.setDisabled(true);
-            fitnessButton.setDisabled(false);
-            calmButton.setDisabled(false);
-            stressedButton.setDisabled(false);
+            stopModes();
         }
         
-        // Start Calm Mode
-        if (calmButton.isClicked(mouseX, mouseY)) {
-            startCalmMode();
+        // Start Calm vs Stress Mode
+        if (calmVsStressButton.isClicked(mouseX, mouseY)) {
+            startCalmVsStressMode();
         }
-        
-        // Start Stressed Mode
-        if (stressedButton.isClicked(mouseX, mouseY)) {
-            startStressedMode();
-        }
-
     }
 
     void drawTitle() {
@@ -167,41 +80,72 @@ class MainScene {
     
     // Method to handle fitness mode
     void startFitnessMode() {
-        restartData();
         timer.startTimer();  // Track time
         fitnessButton.setDisabled(true);
         stopButton.setDisabled(false);
-        calmButton.setDisabled(false);
-        stressedButton.setDisabled(false);
-        isCalmMode = false;  // Ensure calm mode is off
-        isStressedMode = false;  // Ensure stressed mode is off
+        calmVsStressButton.setDisabled(false);
+        isCalmVsStressMode = false;  // Ensure Calm vs Stress mode is off
     }
     
-    // Method to handle calm mode
-    void startCalmMode() {
+    // Method to handle Calm vs Stress mode
+    void startCalmVsStressMode() {
         restartData();
-        isCalmMode = true;
-        isStressedMode = false;
+        isCalmVsStressMode = true;
+        calmVsStressStartTime = millis();  // Record start time
         timer.startTimer();  // Track time
-        calmButton.setDisabled(true);
+        calmVsStressButton.setDisabled(true);
         stopButton.setDisabled(false);
         fitnessButton.setDisabled(false);
-        stressedButton.setDisabled(false);
-        
-        // Reset heart rate readings and calm message flag
-        heartRateIndex = 0;
-        isCalmMessageDisplayed = false;
     }
-    
-    // Method to handle stressed mode
-    void startStressedMode() {
-        restartData();
-        isStressedMode = true;
-        isCalmMode = false;
-        timer.startTimer();  // Track time
-        stressedButton.setDisabled(true);
-        stopButton.setDisabled(false);
+
+    // Method to stop all modes
+    void stopModes() {
+        //restartData();
+        timer.stopTimer();
+        stopButton.setDisabled(true);
         fitnessButton.setDisabled(false);
-        calmButton.setDisabled(false); 
+        calmVsStressButton.setDisabled(false);
+        isCalmVsStressMode = false;
+    }
+
+    // Check Calm vs Stress mode after 60 seconds
+    void checkCalmVsStressMode() {
+        if (millis() - calmVsStressStartTime >= 60000) {  // 60 seconds have passed
+            if (sensorData.hasKey("Heartrate")) {
+                currentHeartRate = sensorData.get("Heartrate");
+                float averageHeartRate = getAverageHeartRate();
+            
+                // Use the age entered from AgeScene
+                int age = ageScene.enteredAge;  // Dynamically get the age from AgeScene
+            
+                // Get min and max heart rate for the user's age group
+                int[] heartRateRange = getHeartRateRangeForAge(age);
+                int minHeartRate = heartRateRange[0];
+                int maxHeartRate = heartRateRange[1];
+            
+                // Check if the heart rate is in the calm range or the stress range
+                if (currentHeartRate < averageHeartRate) {
+                    // User is calm
+                    fill(0, 255, 0);
+                    textSize(25);
+                    text("You are calm", .7 * width, .480 * height);
+                } else if (currentHeartRate > maxHeartRate || currentHeartRate < minHeartRate) {
+                    // User is stressed (if above max threshold or below min threshold)
+                    fill(255, 0, 0);
+                    textSize(25);
+                    text("You are stressed", .7 * width, .480 * height);
+                }
+            }
+        }
+    }
+
+    // Function to get heart rate range (min and max) based on age group
+    int[] getHeartRateRangeForAge(int age) {
+        if (age >= 20 && age <= 30) return new int[] {100, 170};  // 20-30 years: 100-170 bpm
+        if (age >= 30 && age <= 40) return new int[] {95, 162};   // 30-40 years: 95-162 bpm
+        if (age >= 40 && age <= 50) return new int[] {90, 153};   // 40-50 years: 90-153 bpm
+        if (age >= 50 && age <= 60) return new int[] {85, 145};   // 50-60 years: 85-145 bpm
+        if (age >= 60 && age <= 70) return new int[] {80, 136};   // 60-70 years: 80-136 bpm
+        return new int[] {75, 128};                               // 70+ years: 75-128 bpm
     }
 }

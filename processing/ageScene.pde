@@ -1,4 +1,4 @@
-int CALIBRATION_TIME = 30;
+int CALIBRATION_TIME = 3;
 class AgeScene {
     UIButton nextButton; // Button to proceed to the next scene
     TEXTBOX ageTextBox;  // Textbox for age input
@@ -34,7 +34,6 @@ class AgeScene {
             }
             else if(timePassed >= CALIBRATION_TIME){
                 currentScene = "MainScene";
-
             }
         }
     }

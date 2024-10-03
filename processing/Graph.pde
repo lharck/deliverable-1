@@ -52,10 +52,7 @@ void drawGraph(){
 
         lineChart.setData(lineChartX.toArray(), lineChartY.toArray());
     }
-    
-    float seconds = (x);
-    println(seconds);
-    
+        
     lineChart.setMinX(max(x-MAX_VALUES+1, 0));
     lineChart.setMaxX(max(x, MAX_VALUES));
     

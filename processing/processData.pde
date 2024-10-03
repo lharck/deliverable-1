@@ -56,12 +56,15 @@ void readSerial(){
 
 float getAverageHeartRate(){
     float sumOfValues = 0;
+    float valuesUsed = 0;
     
-    for(float hrVal : heartRateValues){
+    for(int i = max(0, heartRateValues.size() - 5); i < heartRateValues.size(); i++)
+    {
+        float hrVal = heartRateValues.get(i);
         sumOfValues += hrVal;
+        valuesUsed++;
     }
-    
-    return sumOfValues/heartRateValues.size();
+    return sumOfValues/valuesUsed;    
 }
 
 int getHeartRate(){
@@ -83,7 +86,8 @@ int getHeartRate(){
 
          // if we lose the heart rate, use the previous cached value, if it exists
         if(hrv <= 0){
-            hrv = heartRateValues.get(heartRateValues.size()-1);
+            if(heartRateValues.size()>=1)
+                hrv = heartRateValues.get(heartRateValues.size()-1);
         }
     }
     
