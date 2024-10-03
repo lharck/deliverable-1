@@ -168,6 +168,7 @@ class MainScene {
     
     // Method to handle fitness mode
     void startFitnessMode() {
+        restartData();
         timer.startTimer();  // Track time
         fitnessButton.setDisabled(true);
         stopButton.setDisabled(false);
@@ -180,6 +181,7 @@ class MainScene {
     
     // Method to handle calm mode
     void startCalmMode() {
+        restartData();
         isCalmMode = true;
         isStressedMode = false;
         timer.startTimer();  // Track time
@@ -201,14 +203,13 @@ class MainScene {
     
     // Method to handle stressed mode
     void startStressedMode() {
+        restartData();
         isStressedMode = true;
         isCalmMode = false;
         timer.startTimer();  // Track time
         stressedButton.setDisabled(true);
         stopButton.setDisabled(false);
         fitnessButton.setDisabled(false);
-        calmButton.setDisabled(false);
-        
+        calmButton.setDisabled(false); 
     }
-
 }
