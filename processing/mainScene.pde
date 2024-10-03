@@ -7,6 +7,12 @@ class MainScene {
     UIButton stressedButton;  // Button for Stressed Mode
     boolean isCalmMode = false;
     boolean isStressedMode = false;
+    int heartRateIndex = 0;
+    int calmDuration = 60;  // 60 seconds for calm mode
+    boolean isCalmMessageDisplayed = false, isStressMessageDisplayed = false;
+    int avgHeartRate = (int) (getAverageHeartRate());
+    int messageStartTime = 0;  // To track when the "You are calm" message starts
+    boolean showCalmMessage = false, showStressMessage = false;  // To control whether the message is shown
     
     MainScene() {
         fitnessButton = new UIButton(90, 30, 120, 40, "Fitness Mode");
@@ -43,6 +49,82 @@ class MainScene {
         calmButton.draw();    // Draw Calm Mode button
         stressedButton.draw(); // Draw Stressed Mode button
         //showAverageHeartRate();
+        if (isCalmMode) {
+            // Get the average heart rate during Calm Mode
+            
+    
+            // Check if 60 seconds have passed
+            if (timer.getElapsedTime() >= calmDuration && !isCalmMessageDisplayed) {
+                // Compare the current average heart rate to avgHeartRate
+                if (avgHeartRate < getAverageHeartRate()) {
+                    fill(0, 255, 0);  // Green background for "calm"
+                    rect(0, 0, width, height);  // Cover the whole screen with green background
+    
+                    textSize(20);
+                    fill(255);  // White text for visibility
+                    text("You are calm", (width - textWidth("You are calm")) / 2, .65 * height);
+                    
+                    // Record the time when the message is displayed
+                    messageStartTime = millis();
+                    showCalmMessage = true;  // Start showing the message
+                    isCalmMessageDisplayed = true;
+                }
+            }
+        }
+    
+        // If the message is being shown, hide it after 5 seconds
+        if (showCalmMessage) {
+            if (millis() - messageStartTime > 5000) {  // 5 seconds passed
+                // Reset the message display state
+                showCalmMessage = false;
+                isCalmMessageDisplayed = false;
+                background(220);  // Reset the background to default color
+            } else {
+                // Continue showing the message within the 5-second window
+                fill(0, 255, 0);  // Green background for "calm"
+                rect(0, 0, width, height);  // Cover the whole screen with green background
+                
+                textSize(20);
+                fill(255);  // White text for visibility
+                text("You are calm", (width - textWidth("You are calm")) / 2, .65 * height);
+            }
+        }
+        if (isStressedMode) {
+            // Get the average heart rate during Stress Mode
+            
+    
+            // Check if 60 seconds have passed
+            if (timer.getElapsedTime() >= calmDuration && !isStressMessageDisplayed) {
+                // Compare the current average heart rate to avgHeartRate
+                if (avgHeartRate > getAverageHeartRate()) {
+                    fill(255, 0, 0);  // Red background for "stressed"
+                    rect(0, 0, width, height);  // Cover the whole screen with red background
+    
+                    textSize(20);
+                    fill(255);  // White text for visibility
+                    text("You are stressed", (width - textWidth("You are stressed")) / 2, .65 * height);
+                    
+                    // Record the time when the message is displayed
+                    messageStartTime = millis();
+                    showStressMessage = true;  // Start showing the stress message
+                    isStressMessageDisplayed = true;
+                }
+            }
+        }
+        if (showStressMessage) {
+            if (millis() - messageStartTime > 5000) {  // 5 seconds passed
+                showStressMessage = false;
+                isStressMessageDisplayed = false;
+                background(220);  // Reset the background to default color
+            } else {
+                fill(255, 0, 0);  // Red background for "stressed"
+                rect(0, 0, width, height);  // Cover the whole screen with red background
+    
+                textSize(20);
+                fill(255);  // White text for visibility
+                text("You are stressed", (width - textWidth("You are stressed")) / 2, .65 * height);
+            }
+        }
     }
 
     void mousePressed() {
@@ -105,6 +187,15 @@ class MainScene {
         stopButton.setDisabled(false);
         fitnessButton.setDisabled(false);
         stressedButton.setDisabled(false);
+        
+        // Reset heart rate readings and calm message flag
+        heartRateIndex = 0;
+        isCalmMessageDisplayed = false;
+        
+        // Clear the heart rate array by resetting values
+        //for (int i = 0; i < calmHeartRates.length; i++) {
+        //    calmHeartRates[i] = 0;
+        //}
         
     }
     
