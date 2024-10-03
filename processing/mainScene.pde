@@ -114,7 +114,7 @@ class MainScene {
         if (showStressMessage) {
             if (millis() - messageStartTime > 5000) {  // 5 seconds passed
                 showStressMessage = false;
-                isStressMessageDisplayed = false;
+                isStressMessageDisplayed = false;de
                 background(220);  // Reset the background to default color
             } else {
                 fill(255, 0, 0);  // Red background for "stressed"
